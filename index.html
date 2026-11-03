@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#F3EAD3">
+<title>작은 밭</title>
+<style>
+:root{--bg:#F3EAD3;--card:#FFFBF2;--ink:#2B2620;--mute:#8A8070;--line:#E3D7BC;--soil:#8B5E3C;--soil2:#6E4628;--green:#4F8F3F;--green2:#DCEFD2;--gold:#E6A23C;--gold2:#FFF1D6;--red:#C94E3F;--sky:#CFE8F7}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Pretendard","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;line-height:1.5}
+.app{max-width:440px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column}
+header{padding:18px 18px 8px;display:flex;align-items:flex-end;justify-content:space-between}
+header h1{margin:0;font-size:20px;letter-spacing:-.02em}
+header .day{font-size:12px;color:var(--mute)}
+.coins{font-size:13px;background:var(--gold2);border:1px solid #F0D9A8;padding:4px 10px;border-radius:99px}
+.pet{margin:8px 18px 0;display:flex;gap:10px;align-items:flex-start}
+.petimg{width:46px;height:46px;flex:none;position:relative}
+.petimg i{position:absolute;width:5px;height:5px;background:currentColor}
+.pet .say{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:9px 12px;font-size:14px;position:relative;flex:1}
+.pet .say:before{content:"";position:absolute;left:-7px;top:14px;border-top:6px solid transparent;border-bottom:6px solid transparent;border-right:7px solid var(--line)}
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:14px 18px}
+.field{background:var(--soil);border-radius:16px;padding:10px 10px 8px;color:#fff;position:relative;min-height:128px;box-shadow:inset 0 -6px 0 var(--soil2)}
+.field .name{font-size:12px;opacity:.9;display:flex;justify-content:space-between}
+.field .plant{height:62px;display:flex;align-items:flex-end;justify-content:center;gap:6px}
+.sprout{width:34px;height:52px;position:relative}
+.sprout i{position:absolute;left:50%;bottom:0;transform:translateX(-50%);width:6px;background:#3E8B2E;border-radius:3px;height:var(--h,14px);transition:height .6s}
+.sprout b{position:absolute;left:50%;bottom:calc(var(--h,14px) - 6px);transform:translateX(-50%);width:var(--w,14px);height:var(--w,14px);border-radius:50%;background:var(--c,#7BC96F);transition:all .6s;box-shadow:0 2px 0 rgba(0,0,0,.15)}
+.sprout.ripe b{animation:wig 1.2s infinite}
+@keyframes wig{0%,100%{transform:translateX(-50%) rotate(-6deg)}50%{transform:translateX(-50%) rotate(6deg)}}
+.special{position:absolute;right:8px;top:8px;display:flex;gap:2px;flex-wrap:wrap;max-width:70px;justify-content:flex-end}
+.special span{width:12px;height:12px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 2px #fff6}
+.field .btn{width:100%;margin-top:6px;border:0;border-radius:10px;padding:8px;font-size:13px;font-weight:600;background:#FFF;color:var(--soil2)}
+.field .btn[disabled]{background:#ffffff33;color:#fff9}
+.field .time{font-size:11px;text-align:center;opacity:.85;margin-top:6px}
+.seedbox{margin:4px 18px 14px;background:var(--card);border:2px dashed var(--gold);border-radius:16px;padding:14px}
+.seedbox h2{margin:0 0 4px;font-size:15px;display:flex;align-items:center;gap:8px}
+.seedbox h2 .pill{font-size:11px;background:var(--gold2);border:1px solid #F0D9A8;border-radius:99px;padding:2px 8px;font-weight:600}
+.seedbox p{margin:0 0 10px;font-size:13px;color:var(--mute)}
+.row{display:flex;gap:8px;margin-top:8px}
+select,input[type=time],input[type=text]{width:100%;font:inherit;font-size:14px;padding:10px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink)}
+label.l{display:block;font-size:12px;color:var(--mute);margin:8px 0 4px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1px solid var(--line);background:#fff;border-radius:99px;padding:7px 11px;font-size:13px}
+.chip.on{background:var(--green2);border-color:var(--green);color:#2E5E22;font-weight:600}
+.primary{width:100%;margin-top:12px;border:0;border-radius:12px;padding:13px;font-size:15px;font-weight:700;background:var(--green);color:#fff}
+.primary[disabled]{background:#BFC9B8}
+.ghost{width:100%;margin-top:8px;border:1px solid var(--line);border-radius:12px;padding:11px;font-size:13px;background:#fff;color:var(--mute)}
+.planted{background:var(--green2);border-radius:12px;padding:12px}
+.planted b{display:block;font-size:15px}
+.planted small{color:#4B6B42;font-size:12px}
+.done{background:var(--gold2);border-radius:12px;padding:12px;text-align:center;font-weight:600}
+footer{margin-top:auto;padding:10px 18px 26px;font-size:11px;color:var(--mute);text-align:center}
+footer button{border:0;background:none;color:var(--mute);text-decoration:underline;font:inherit;font-size:11px}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#2B2620;color:#fff;padding:10px 16px;border-radius:99px;font-size:13px;opacity:0;transition:.3s;pointer-events:none;max-width:90%;text-align:center}
+.toast.show{opacity:1}
+.hidden{display:none !important}
+.modal{position:fixed;inset:0;background:#0006;display:flex;align-items:flex-end;justify-content:center;z-index:9}
+.modal .box{background:var(--card);width:100%;max-width:440px;border-radius:20px 20px 0 0;padding:18px 18px 28px}
+.modal h3{margin:0 0 8px;font-size:16px}
+textarea{width:100%;font:inherit;font-size:12px;padding:10px;border:1px solid var(--line);border-radius:10px;height:120px}
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div><h1>작은 밭</h1><div class="day" id="day"></div></div>
+    <div class="coins">🌰 <span id="coins">0</span></div>
+  </header>
+
+  <div class="pet">
+    <div class="petimg" id="petimg"></div>
+    <div class="say" id="say"></div>
+  </div>
+
+  <div class="fields" id="fields"></div>
+
+  <div class="seedbox" id="seedbox"></div>
+
+  <footer>
+    하루 한 번, 1~3분이면 끝. · <button id="btnRecord">기록 보내기</button> · <button id="btnPet">펫 이름</button>
+  </footer>
+</div>
+<div class="toast" id="toast"></div>
+<div class="modal hidden" id="modal"><div class="box">
+  <h3>기록 보내기</h3>
+  <p style="font-size:13px;color:var(--mute);margin:0 0 8px">아래 글을 복사해서 보내 주면 돼요. 이름이나 개인 정보는 없어요.</p>
+  <div id="q7" class="hidden" style="margin-bottom:8px"><label class="l">일주일 동안 바깥 씨앗을 <b>실제로</b> 한 날은 며칠이었어요?</label><select id="q7v"><option value="">선택</option><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option></select></div>
+  <textarea id="rec" readonly></textarea>
+  <button class="primary" id="btnCopy">복사하기</button>
+  <button class="ghost" id="btnShare">공유로 보내기</button>
+  <button class="ghost" id="btnClose">닫기</button>
+</div></div>
+
+<script>
+(function(){
+const FIELDS=[
+ {k:'people',n:'사람 밭',c:'#F28C8C',opts:['친구에게 안부 문자','가족에게 전화 5분','고맙다고 한마디','같이 밥 먹자고 묻기','오랜만인 사람에게 연락','동료·이웃에게 먼저 인사']},
+ {k:'body',n:'몸 밭',c:'#7BC96F',opts:['10분 걷기','물 한 잔 더','스트레칭 5분','햇빛 쬐며 5분','계단으로 올라가기','30분 일찍 눕기']},
+ {k:'rest',n:'쉼 밭',c:'#8FB8E8',opts:['음악 한 곡 끝까지','창문 열고 3분','좋아하는 간식 천천히','10분 아무것도 안 하기','사진 한 장 찍기','영상 딱 하나만']},
+ {k:'work',n:'일 밭',c:'#F2C14E',opts:['책상 한 칸 치우기','메시지 한 통 답하기','10분만 시작하기','내일 할 일 3개 적기','밀린 것 하나 끝내기','가방 정리']}
+];
+const GROW_MS=6*3600*1000, SELL_AFTER_MS=12*3600*1000, MIN_AFTER_MS=10*60*1000;
+const PET_LINES=['오늘도 밭에 왔네. 나는 여기서 구경할게.','흙냄새 좋다. 심은 거 잘 자라고 있어.','손님이 가끔 와서 남은 걸 사 가. 걱정 마.','비 안 와도 밭은 자라. 천천히.','네 밭 모양이 조금씩 달라지는 거 알아?','나는 여기 계속 있을 거야. 올 때 오면 돼.','왼쪽 위 밭이 제일 먼저 익을 것 같아.','오늘은 그냥 보고 가도 괜찮아.','작은 밭인데 꽤 살아 있지.','내일 또 보자. 나는 안 가.'];
+const K='smallfarm_v1';
+let S=load();
+function load(){try{const s=JSON.parse(localStorage.getItem(K));if(s)return s;}catch(e){}
+ const now=Date.now();return {id:Math.random().toString(36).slice(2,8),start:now,coins:0,pet:'콩이',fields:FIELDS.map(f=>({k:f.k,plantedAt:now,special:0})),seed:null,visits:[],seeds:[],dones:[],sold:[],q7:null};}
+function save(){try{localStorage.setItem(K,JSON.stringify(S));}catch(e){}}
+function today(d){d=d?new Date(d):new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function dayNo(){return Math.floor((Date.now()-S.start)/86400000)+1;}
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),2200);}
+// 방문 기록
+if(!S.visits.includes(today())){S.visits.push(today());save();}
+// 펫 그림(픽셀)
+(function(){const p=document.getElementById('petimg');const px=[[2,0,'#C2410C'],[3,0,'#C2410C'],[4,0,'#C2410C'],[5,0,'#C2410C'],[1,1,'#C2410C'],[2,1,'#C2410C'],[3,1,'#C2410C'],[4,1,'#C2410C'],[5,1,'#C2410C'],[6,1,'#C2410C'],[2,2,'#F8C8A0'],[3,2,'#F8C8A0'],[4,2,'#F8C8A0'],[5,2,'#F8C8A0'],[2,3,'#F8C8A0'],[3,3,'#111'],[4,3,'#F8C8A0'],[5,3,'#111'],[2,4,'#F8C8A0'],[3,4,'#F8C8A0'],[4,4,'#F8C8A0'],[5,4,'#F8C8A0'],[1,5,'#2563EB'],[2,5,'#2563EB'],[3,5,'#2563EB'],[4,5,'#2563EB'],[5,5,'#2563EB'],[6,5,'#2563EB'],[2,6,'#2563EB'],[3,6,'#2563EB'],[4,6,'#2563EB'],[5,6,'#2563EB'],[2,7,'#1E3A8A'],[3,7,'#1E3A8A'],[4,7,'#1E3A8A'],[5,7,'#1E3A8A'],[2,8,'#3F2A14'],[3,8,'#3F2A14'],[4,8,'#3F2A14'],[5,8,'#3F2A14']];
+ p.innerHTML=px.map(q=>`<i style="left:${q[0]*5}px;top:${q[1]*5}px;background:${q[2]}"></i>`).join('');})();
+// 렌더
+function render(){
+ const d=dayNo();document.getElementById('day').textContent=`${d}일째 · ${today()}`;
+ document.getElementById('coins').textContent=S.coins;
+ document.getElementById('say').textContent=S.pet+': '+PET_LINES[(d-1)%PET_LINES.length];
+ const now=Date.now();const fw=document.getElementById('fields');fw.innerHTML='';
+ S.fields.forEach((f,i)=>{const def=FIELDS[i];let el=now-f.plantedAt;
+  // 12시간 넘게 익은 채 두면 손님이 사 감
+  if(el>GROW_MS+SELL_AFTER_MS){S.coins+=2;S.sold.push(today());f.plantedAt=now;el=0;save();toast(`손님이 ${def.n} 작물을 사 갔어요 (+2)`);}
+  const pct=Math.min(1,el/GROW_MS);const ripe=pct>=1;
+  const left=ripe?'다 자랐어요':fmt(GROW_MS-el)+' 뒤에 익어요';
+  const div=document.createElement('div');div.className='field';
+  div.innerHTML=`<div class="name"><span>${def.n}</span></div><div class="special">${'<span></span>'.repeat(f.special)}</div>
+   <div class="plant"><div class="sprout ${ripe?'ripe':''}" style="--h:${10+pct*40}px;--w:${8+pct*18}px;--c:${def.c}"><i></i><b></b></div></div>
+   <button class="btn" ${ripe?'':'disabled'}>${ripe?'거두기 +3':'자라는 중'}</button><div class="time">${left}</div>`;
+  div.querySelector('.btn').onclick=()=>{S.coins+=3;f.plantedAt=Date.now();save();toast('거뒀어요 +3 · 새 씨앗을 심었어요');render();};
+  fw.appendChild(div);});
+ renderSeed();
+}
+function fmt(ms){const h=Math.floor(ms/3600000),m=Math.floor(ms%3600000/60000);return h>0?`${h}시간 ${m}분`:`${m}분`;}
+// 바깥 씨앗
+let pick={field:null,what:'',custom:''};
+function renderSeed(){
+ const box=document.getElementById('seedbox');const s=S.seed;const t=today();
+ if(s&&s.date!==t&&!s.done){s.date=t;s.carried=(s.carried||0)+1;save();}
+ if(s&&s.done&&s.date===t){box.innerHTML=`<h2>바깥 씨앗 <span class="pill">오늘 끝</span></h2><div class="done">오늘 ${s.what} 했어요. ${FIELDS.find(f=>f.k===s.field).n}에 반짝이는 작물이 생겼어요.</div>`;return;}
+ if(s&&!s.done){const at=whenMs(s);const can=Date.now()>=at+MIN_AFTER_MS;
+  box.innerHTML=`<h2>바깥 씨앗 <span class="pill">심어 둠${s.carried?' · 어제 것 오늘로':''}</span></h2>
+   <div class="planted"><b>${s.what}</b><small>${s.when} · ${s.where||'어디서든'} · ${FIELDS.find(f=>f.k===s.field).n}</small></div>
+   <button class="primary" id="did" ${can?'':'disabled'}>${can?'했어':(Date.now()<at?s.when+'에 '+S.pet+'가 불러요':'조금만 더 하고 와요')}</button>
+   <button class="ghost" id="undo">다른 걸로 바꿀래</button>`;
+  document.getElementById('did').onclick=()=>{s.done=true;s.doneAt=Date.now();S.dones.push(t);const f=S.fields.find(f=>f.k===s.field);f.special++;S.seeds.push({d:t,f:s.field,w:s.what,t:s.when,p:!!s.where,done:true,carried:s.carried||0});save();toast('반짝이는 작물이 났어요');render();};
+  document.getElementById('undo').onclick=()=>{S.seed=null;save();render();};
+  return;}
+ // 새로 심기
+ const fdef=FIELDS.find(f=>f.k===pick.field);
+ box.innerHTML=`<h2>바깥 씨앗 <span class="pill">하루 1개</span></h2><p>밖에서 하고 오는 씨앗이에요. 하고 오면 그 밭에만 나는 반짝이는 작물이 생겨요.</p>
+  <label class="l">어느 밭</label><div class="chips" id="fc">${FIELDS.map(f=>`<span class="chip ${pick.field===f.k?'on':''}" data-k="${f.k}">${f.n}</span>`).join('')}</div>
+  <div id="whatwrap" class="${fdef?'':'hidden'}"><label class="l">무엇을 (10분 안에 끝나는 걸로)</label><div class="chips" id="wc">${fdef?fdef.opts.map(o=>`<span class="chip ${pick.what===o?'on':''}" data-w="${o}">${o}</span>`).join('')+`<span class="chip ${pick.what==='__c'?'on':''}" data-w="__c">직접 쓰기</span>`:''}</div>
+  <input type="text" id="custom" class="${pick.what==='__c'?'':'hidden'}" placeholder="예: 편의점까지 걸어가기" value="${pick.custom}" maxlength="30" style="margin-top:8px">
+  <div class="row"><div style="flex:1"><label class="l">언제</label><input type="time" id="when" value="${defaultTime()}"></div><div style="flex:1.4"><label class="l">어디서 (선택)</label><input type="text" id="where" placeholder="예: 집 앞" maxlength="20"></div></div></div>
+  <button class="primary" id="plant" ${fdef&&pick.what?'':'disabled'}>심기</button>`;
+ box.querySelectorAll('#fc .chip').forEach(c=>c.onclick=()=>{pick.field=c.dataset.k;pick.what='';renderSeed();});
+ box.querySelectorAll('#wc .chip').forEach(c=>c.onclick=()=>{pick.what=c.dataset.w;renderSeed();if(pick.what==='__c')document.getElementById('custom').focus();});
+ const cu=document.getElementById('custom');if(cu)cu.oninput=()=>{pick.custom=cu.value;document.getElementById('plant').disabled=!cu.value.trim();};
+ const pb=document.getElementById('plant');if(pb)pb.onclick=()=>{const what=pick.what==='__c'?pick.custom.trim():pick.what;if(!what)return;
+  const when=document.getElementById('when').value||defaultTime();const where=document.getElementById('where').value.trim();
+  S.seed={date:t,field:pick.field,what,when,where,done:false,plantedAt:Date.now()};S.seeds.push({d:t,f:pick.field,w:what,t:when,p:!!where,done:false});save();
+  if('Notification'in window&&Notification.permission==='default'){Notification.requestPermission();}
+  pick={field:null,what:'',custom:''};toast(when+'에 '+S.pet+'가 한 번 불러요');render();};
+}
+function defaultTime(){const d=new Date(Date.now()+3600000);return String(d.getHours()).padStart(2,'0')+':'+String(Math.floor(d.getMinutes()/10)*10).padStart(2,'0');}
+function whenMs(s){const [h,m]=s.when.split(':').map(Number);const d=new Date();d.setHours(h,m,0,0);return d.getTime();}
+// 시각 알림(열려 있을 때) + 1분마다 다시 그림
+let pinged=null;
+setInterval(()=>{const s=S.seed;if(s&&!s.done&&s.date===today()){const at=whenMs(s);if(Date.now()>=at&&pinged!==s.date+s.when){pinged=s.date+s.when;toast(S.pet+': 지금이래. '+s.what);if('Notification'in window&&Notification.permission==='granted'){try{new Notification('작은 밭',{body:S.pet+': 지금이래. '+s.what});}catch(e){}}}}render();},60000);
+// 기록
+function record(){const d=dayNo();const lines=[`작은밭 기록 ${S.id}`,`시작 ${today(S.start)} · 오늘 ${d}일째`,`접속한 날 ${S.visits.length}일: ${S.visits.map(v=>v.slice(5)).join(',')}`,`바깥 씨앗 심음 ${S.seeds.length}회 / 했어 ${S.dones.length}일: ${S.dones.map(v=>v.slice(5)).join(',')}`,`씨앗 목록: ${S.seeds.map(x=>`${x.d.slice(5)} ${FIELDS.find(f=>f.k===x.f).n.replace(' 밭','')}/${x.w}/${x.t}${x.p?'/장소':''}${x.done?'/함':''}`).join(' | ')||'없음'}`,`도토리 ${S.coins} · 손님 판매 ${S.sold.length}회`];
+ if(S.q7!==null&&S.q7!=='')lines.push(`실제로 한 날(본인 답) ${S.q7}일`);return lines.join('\n');}
+document.getElementById('btnRecord').onclick=()=>{const m=document.getElementById('modal');m.classList.remove('hidden');const q=document.getElementById('q7');if(dayNo()>=7){q.classList.remove('hidden');document.getElementById('q7v').value=S.q7||'';}document.getElementById('rec').value=record();};
+document.getElementById('q7v').onchange=e=>{S.q7=e.target.value;save();document.getElementById('rec').value=record();};
+document.getElementById('btnClose').onclick=()=>document.getElementById('modal').classList.add('hidden');
+document.getElementById('btnCopy').onclick=()=>{const ta=document.getElementById('rec');ta.select();try{navigator.clipboard?navigator.clipboard.writeText(ta.value):document.execCommand('copy');toast('복사했어요. 카톡에 붙여 넣어 주세요');}catch(e){document.execCommand('copy');toast('복사했어요');}};
+document.getElementById('btnShare').onclick=()=>{if(navigator.share){navigator.share({text:record()}).catch(()=>{});}else{toast('이 폰은 공유가 안 돼요. 복사해 주세요');}};
+document.getElementById('btnPet').onclick=()=>{const n=prompt('펫 이름',S.pet);if(n&&n.trim()){S.pet=n.trim().slice(0,8);save();render();}};
+render();
+})();
+</script>
+</body>
+</html>
